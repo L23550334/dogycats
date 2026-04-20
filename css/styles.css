@@ -1,0 +1,357 @@
+/* =============================================
+   Adopta un Amigo Virtual - Custom Styles
+   ============================================= */
+
+/* CSS Variables - Color Palette */
+:root {
+    --color-primary: #4a6fa5;
+    --color-primary-dark: #3d5a87;
+    --color-secondary: #e07a5f;
+    --color-secondary-dark: #c4684f;
+    --color-success: #81b29a;
+    --color-success-dark: #6a9680;
+    --color-background: #f8f9fa;
+    --color-surface: #ffffff;
+    --color-text: #2d3436;
+    --color-text-muted: #6c757d;
+    --color-border: #dee2e6;
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    --border-radius: 12px;
+}
+
+/* Base Styles */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background-color: var(--color-background);
+    color: var(--color-text);
+    line-height: 1.6;
+}
+
+/* Header */
+.header-main {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    color: white;
+    box-shadow: var(--shadow-md);
+}
+
+.header-main h1 {
+    font-size: 1.75rem;
+    color: white;
+}
+
+.header-main p {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+/* Cards */
+.card {
+    border: none;
+    border-radius: var(--border-radius);
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Dog Cards */
+.dog-card {
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.dog-card .card-img-top {
+    height: 200px;
+    object-fit: cover;
+    transition: transform var(--transition-normal);
+}
+
+.dog-card:hover .card-img-top {
+    transform: scale(1.05);
+}
+
+.dog-card .card-img-wrapper {
+    overflow: hidden;
+    position: relative;
+}
+
+.dog-card .card-img-wrapper::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);
+    pointer-events: none;
+}
+
+.dog-card .card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.dog-card .card-title {
+    font-weight: 700;
+    color: var(--color-primary-dark);
+    margin-bottom: 0.5rem;
+}
+
+.dog-card .breed-group {
+    font-size: 0.85rem;
+    color: var(--color-secondary);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.75rem;
+}
+
+.dog-card .temperament {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    flex: 1;
+}
+
+.dog-card .dog-stats {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--color-border);
+    margin-top: auto;
+}
+
+.dog-card .dog-stats span {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.dog-card .btn-adopt {
+    background-color: var(--color-secondary);
+    border-color: var(--color-secondary);
+    color: white;
+    font-weight: 600;
+    transition: all var(--transition-fast);
+}
+
+.dog-card .btn-adopt:hover {
+    background-color: var(--color-secondary-dark);
+    border-color: var(--color-secondary-dark);
+    transform: scale(1.02);
+}
+
+/* Search Section */
+.card-title i {
+    color: var(--color-primary);
+}
+
+/* Adoptions Panel */
+.card-header.bg-success {
+    background: linear-gradient(135deg, var(--color-success) 0%, var(--color-success-dark) 100%) !important;
+}
+
+.adoption-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: var(--color-background);
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    transition: all var(--transition-fast);
+}
+
+.adoption-item:hover {
+    background: #e9ecef;
+}
+
+.adoption-item img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--color-success);
+}
+
+.adoption-item .adoption-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.adoption-item .adoption-name {
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.adoption-item .adoption-details {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    margin: 0;
+}
+
+.adoption-item .btn-remove {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+}
+
+/* Modal */
+.modal-header.bg-primary {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%) !important;
+}
+
+#adoptionModal .modal-content {
+    border: none;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+#adoptionModal .modal-body {
+    padding: 1.5rem 2rem;
+}
+
+/* Footer */
+.footer-main {
+    background-color: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+    color: var(--color-text);
+}
+
+.footer-main a {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+.footer-main a:hover {
+    text-decoration: underline;
+}
+
+/* Loading State */
+#loadingSpinner {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Badges */
+.badge {
+    font-weight: 500;
+    padding: 0.5em 0.8em;
+}
+
+/* Form Controls */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 0.2rem rgba(74, 111, 165, 0.25);
+}
+
+/* Buttons */
+.btn-success {
+    background-color: var(--color-success);
+    border-color: var(--color-success);
+}
+
+.btn-success:hover {
+    background-color: var(--color-success-dark);
+    border-color: var(--color-success-dark);
+}
+
+.btn-primary {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.btn-primary:hover {
+    background-color: var(--color-primary-dark);
+    border-color: var(--color-primary-dark);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 991.98px) {
+    .header-main h1 {
+        font-size: 1.5rem;
+    }
+    
+    .col-lg-4 .card {
+        margin-top: 2rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .header-main .d-flex {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .dog-card .card-img-top {
+        height: 180px;
+    }
+}
+
+/* Animation for new adoptions */
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.adoption-item.new {
+    animation: slideInRight 0.4s ease;
+}
+
+/* Empty state styling */
+#noAdopciones i,
+#noResults i {
+    opacity: 0.5;
+}
+
+/* Scrollbar Styling */
+#adopcionesContainer {
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+#adopcionesContainer::-webkit-scrollbar {
+    width: 6px;
+}
+
+#adopcionesContainer::-webkit-scrollbar-track {
+    background: var(--color-background);
+    border-radius: 3px;
+}
+
+#adopcionesContainer::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 3px;
+}
+
+#adopcionesContainer::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text-muted);
+}
