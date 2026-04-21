@@ -1,6 +1,6 @@
 /**
  * DogSelector - Componente para filtros y busqueda
- * Maneja la logica de filtrado de perros
+ * Maneja filtros para perros y gatos.
  */
 
 /**
@@ -27,14 +27,21 @@ export function poblarSelect(selectElement, opciones, placeholder = 'Todos') {
  * @returns {Object} Objeto con los valores de los filtros
  */
 export function obtenerFiltros() {
+    const speciesSelect = document.getElementById('speciesSelect');
     const searchNombre = document.getElementById('searchNombre');
-    const filterGrupo = document.getElementById('filterGrupo');
+    const filterPrincipal = document.getElementById('filterPrincipal');
     const filterTemperamento = document.getElementById('filterTemperamento');
+    const filterChildFriendly = document.getElementById('filterChildFriendly');
     
+    const especie = speciesSelect ? speciesSelect.value : 'perro';
+    const childFriendlyValue = filterChildFriendly ? filterChildFriendly.value : '';
+
     return {
+        especie,
         nombre: searchNombre ? searchNombre.value.trim() : '',
-        grupoRaza: filterGrupo ? filterGrupo.value : '',
-        temperamento: filterTemperamento ? filterTemperamento.value : ''
+        principal: filterPrincipal ? filterPrincipal.value : '',
+        temperamento: filterTemperamento ? filterTemperamento.value : '',
+        childFriendly: childFriendlyValue
     };
 }
 
@@ -43,12 +50,14 @@ export function obtenerFiltros() {
  */
 export function limpiarFiltros() {
     const searchNombre = document.getElementById('searchNombre');
-    const filterGrupo = document.getElementById('filterGrupo');
+    const filterPrincipal = document.getElementById('filterPrincipal');
     const filterTemperamento = document.getElementById('filterTemperamento');
+    const filterChildFriendly = document.getElementById('filterChildFriendly');
     
     if (searchNombre) searchNombre.value = '';
-    if (filterGrupo) filterGrupo.value = '';
+    if (filterPrincipal) filterPrincipal.value = '';
     if (filterTemperamento) filterTemperamento.value = '';
+    if (filterChildFriendly) filterChildFriendly.value = '';
 }
 
 /**
@@ -57,7 +66,7 @@ export function limpiarFiltros() {
  */
 export function hayFiltrosActivos() {
     const filtros = obtenerFiltros();
-    return filtros.nombre !== '' || filtros.grupoRaza !== '' || filtros.temperamento !== '';
+    return filtros.nombre !== '' || filtros.principal !== '' || filtros.temperamento !== '' || filtros.childFriendly !== '';
 }
 
 /**
@@ -66,28 +75,59 @@ export function hayFiltrosActivos() {
  * @param {Function} extraerGrupos - Funcion para extraer grupos unicos
  * @param {Function} extraerTemperamentos - Funcion para extraer temperamentos unicos
  */
-export function inicializarSelectores(perros, extraerGrupos, extraerTemperamentos) {
-    const filterGrupo = document.getElementById('filterGrupo');
+export function inicializarSelectores(mascotas, extraerPrimario, extraerTemperamentos, especie = 'perro') {
+    const filterPrincipal = document.getElementById('filterPrincipal');
     const filterTemperamento = document.getElementById('filterTemperamento');
+    const filterChildFriendly = document.getElementById('filterChildFriendly');
+    const principalLabel = document.getElementById('filterPrincipalLabel');
+    const principalFilterWrap = document.getElementById('principalFilterWrap');
+    const childFriendlyWrap = document.getElementById('childFriendlyWrap');
     
-    // Poblar grupos de raza
-    const grupos = extraerGrupos(perros);
-    poblarSelect(filterGrupo, grupos, 'Todos los grupos');
+    if (principalLabel) {
+        principalLabel.textContent = especie === 'perro' ? 'Grupo de Raza' : 'Atributo';
+    }
+
+    if (especie === 'perro') {
+        if (principalFilterWrap) principalFilterWrap.classList.remove('d-none');
+        const primarios = extraerPrimario(mascotas);
+        poblarSelect(filterPrincipal, primarios, 'Todos los grupos');
+    } else {
+        if (principalFilterWrap) principalFilterWrap.classList.add('d-none');
+        if (filterPrincipal) filterPrincipal.innerHTML = '<option value="">Todos los grupos</option>';
+    }
     
-    // Poblar temperamentos (limitar a los mas comunes)
-    const temperamentos = extraerTemperamentos(perros).slice(0, 30);
+    const temperamentos = extraerTemperamentos(mascotas).slice(0, 30);
     poblarSelect(filterTemperamento, temperamentos, 'Todos los temperamentos');
+
+    if (childFriendlyWrap && filterChildFriendly) {
+        if (especie === 'gato') {
+            childFriendlyWrap.classList.remove('d-none');
+            poblarSelect(filterChildFriendly, ['1', '2', '3', '4', '5'], 'Cualquier nivel');
+        } else {
+            childFriendlyWrap.classList.add('d-none');
+            filterChildFriendly.innerHTML = '<option value="">Cualquier nivel</option>';
+        }
+    }
 }
 
 /**
  * Configura los event listeners para los filtros
  * @param {Function} onFiltrar - Callback que se ejecuta cuando cambian los filtros
  */
-export function configurarEventListeners(onFiltrar) {
+export function configurarEventListeners(onFiltrar, onCambiarEspecie) {
+    const speciesSelect = document.getElementById('speciesSelect');
     const searchNombre = document.getElementById('searchNombre');
-    const filterGrupo = document.getElementById('filterGrupo');
+    const filterPrincipal = document.getElementById('filterPrincipal');
     const filterTemperamento = document.getElementById('filterTemperamento');
+    const filterChildFriendly = document.getElementById('filterChildFriendly');
     const btnLimpiar = document.getElementById('btnLimpiarFiltros');
+    if (speciesSelect) {
+        speciesSelect.addEventListener('change', () => {
+            limpiarFiltros();
+            if (onCambiarEspecie) onCambiarEspecie(speciesSelect.value);
+        });
+    }
+
     
     // Debounce para el campo de busqueda
     let timeoutId;
@@ -101,12 +141,16 @@ export function configurarEventListeners(onFiltrar) {
         });
     }
     
-    if (filterGrupo) {
-        filterGrupo.addEventListener('change', onFiltrar);
+    if (filterPrincipal) {
+        filterPrincipal.addEventListener('change', onFiltrar);
     }
     
     if (filterTemperamento) {
         filterTemperamento.addEventListener('change', onFiltrar);
+    }
+
+    if (filterChildFriendly) {
+        filterChildFriendly.addEventListener('change', onFiltrar);
     }
     
     if (btnLimpiar) {

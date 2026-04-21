@@ -17,10 +17,10 @@ export function inicializarModal() {
 }
 
 /**
- * Abre el modal con los datos del perro seleccionado
- * @param {Perro} perro - Instancia del perro a adoptar
+ * Abre el modal con los datos de la mascota seleccionada
+ * @param {Object} mascota - Instancia de Perro o Gato a adoptar
  */
-export function abrirModal(perro) {
+export function abrirModal(mascota) {
     if (!modalInstance) {
         inicializarModal();
     }
@@ -34,12 +34,16 @@ export function abrirModal(perro) {
     const nombreAdoptante = document.getElementById('nombreAdoptante');
     
     if (modalPerroImg) {
-        modalPerroImg.src = perro.imagen;
-        modalPerroImg.alt = `Foto de ${perro.nombre}`;
+        modalPerroImg.src = mascota.imagen;
+        modalPerroImg.alt = `Foto de ${mascota.nombre}`;
     }
-    if (modalPerroNombre) modalPerroNombre.textContent = perro.nombre;
-    if (modalPerroGrupo) modalPerroGrupo.textContent = perro.grupoRaza;
-    if (perroIdInput) perroIdInput.value = perro.id;
+    if (modalPerroNombre) modalPerroNombre.textContent = mascota.nombre;
+    if (modalPerroGrupo) {
+        modalPerroGrupo.textContent = mascota.especie === 'perro'
+            ? (mascota.grupoRaza || 'Sin grupo')
+            : `Child Friendly: ${mascota.childFriendly || 0}/5`;
+    }
+    if (perroIdInput) perroIdInput.value = mascota.id;
     
     // Limpiar campos del formulario
     if (nombreMascota) nombreMascota.value = '';
@@ -69,7 +73,7 @@ export function obtenerDatosFormulario() {
     const nombreMascota = document.getElementById('nombreMascota');
     const nombreAdoptante = document.getElementById('nombreAdoptante');
     
-    const perroId = perroIdInput ? parseInt(perroIdInput.value) : null;
+    const perroId = perroIdInput ? perroIdInput.value : null;
     const mascota = nombreMascota ? nombreMascota.value.trim() : '';
     const adoptante = nombreAdoptante ? nombreAdoptante.value.trim() : '';
     

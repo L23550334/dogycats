@@ -1,8 +1,10 @@
+import { Mascota } from './Mascota.js';
+
 /**
  * Clase Perro - Programacion Orientada a Objetos
  * Representa una raza de perro con todas sus caracteristicas
  */
-export class Perro {
+export class Perro extends Mascota {
     /**
      * Constructor de la clase Perro
      * @param {number} id - ID unico de la raza
@@ -16,16 +18,9 @@ export class Perro {
      * @param {string} criado_para - Proposito original de la raza
      */
     constructor(id, nombre, grupoRaza, temperamento, peso, altura, esperanzaVida, imagen, criadoPara = '') {
-        this.id = id;
-        this.nombre = nombre;
+        super(id, 'perro', nombre, temperamento, peso, altura, esperanzaVida, imagen);
         this.grupoRaza = grupoRaza;
-        this.temperamento = temperamento;
-        this.peso = peso;
-        this.altura = altura;
-        this.esperanzaVida = esperanzaVida;
-        this.imagen = imagen;
         this.criadoPara = criadoPara;
-        this.fechaCreacion = new Date();
     }
 
     /**
@@ -41,10 +36,7 @@ export class Perro {
      * @returns {string[]} Array de temperamentos
      */
     getTemperamentoArray() {
-        if (!this.temperamento || this.temperamento === 'No especificado') {
-            return [];
-        }
-        return this.temperamento.split(', ').map(t => t.trim());
+        return super.getTemperamentoArray();
     }
 
     /**
@@ -79,14 +71,7 @@ export class Perro {
      * @returns {number} Peso promedio en kg
      */
     getPesoPromedio() {
-        if (!this.peso || this.peso === 'N/A') return 0;
-        
-        // El peso viene en formato "X - Y" kg
-        const numeros = this.peso.match(/\d+/g);
-        if (!numeros || numeros.length === 0) return 0;
-        
-        const suma = numeros.reduce((acc, num) => acc + parseInt(num), 0);
-        return suma / numeros.length;
+        return super.getPesoPromedio();
     }
 
     /**
@@ -94,13 +79,7 @@ export class Perro {
      * @returns {number} Altura promedio en cm
      */
     getAlturaPromedio() {
-        if (!this.altura || this.altura === 'N/A') return 0;
-        
-        const numeros = this.altura.match(/\d+/g);
-        if (!numeros || numeros.length === 0) return 0;
-        
-        const suma = numeros.reduce((acc, num) => acc + parseInt(num), 0);
-        return suma / numeros.length;
+        return super.getAlturaPromedio();
     }
 
     /**
@@ -120,10 +99,7 @@ export class Perro {
      * @returns {boolean} True si tiene ese temperamento
      */
     tieneTemperamento(temperamento) {
-        const temperamentos = this.getTemperamentoArray();
-        return temperamentos.some(t => 
-            t.toLowerCase().includes(temperamento.toLowerCase())
-        );
+        return super.tieneTemperamento(temperamento);
     }
 
     /**
@@ -132,7 +108,7 @@ export class Perro {
      * @returns {boolean} True si coincide
      */
     coincideConNombre(busqueda) {
-        return this.nombre.toLowerCase().includes(busqueda.toLowerCase());
+        return super.coincideConNombre(busqueda);
     }
 
     /**
@@ -152,16 +128,8 @@ export class Perro {
      * @returns {Object} Objeto con datos de adopcion
      */
     crearRegistroAdopcion(nombreMascota, nombreAdoptante) {
-        return {
-            id: `${this.id}-${Date.now()}`,
-            perroId: this.id,
-            razaNombre: this.nombre,
-            nombreMascota: nombreMascota,
-            nombreAdoptante: nombreAdoptante,
-            grupoRaza: this.grupoRaza,
-            imagen: this.imagen,
-            fechaAdopcion: new Date().toISOString()
-        };
+        const base = super.crearRegistroAdopcion(nombreMascota, nombreAdoptante);
+        return { ...base, grupoRaza: this.grupoRaza };
     }
 
     /**

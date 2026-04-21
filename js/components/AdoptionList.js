@@ -26,6 +26,7 @@ function formatearFecha(fechaISO) {
  * @returns {string} HTML del item
  */
 export function crearAdopcionItem(adopcion) {
+    const especie = adopcion.especie ? ` (${adopcion.especie})` : '';
     return `
         <div class="adoption-item new" data-adopcion-id="${adopcion.id}">
             <img 
@@ -36,7 +37,7 @@ export function crearAdopcionItem(adopcion) {
             <div class="adoption-info">
                 <p class="adoption-name">${adopcion.nombreMascota}</p>
                 <p class="adoption-details">
-                    ${adopcion.razaNombre} - Por ${adopcion.nombreAdoptante}
+                    ${adopcion.razaNombre}${especie} - Por ${adopcion.nombreAdoptante}
                 </p>
                 <small class="text-muted">${formatearFecha(adopcion.fechaAdopcion)}</small>
             </div>

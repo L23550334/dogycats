@@ -140,6 +140,13 @@ body {
     gap: 0.25rem;
 }
 
+.cat-ratings {
+    font-size: 0.82rem;
+    color: var(--color-primary-dark);
+    border-top: 1px dashed var(--color-border);
+    padding-top: 0.5rem;
+}
+
 .dog-card .btn-adopt {
     background-color: var(--color-secondary);
     border-color: var(--color-secondary);

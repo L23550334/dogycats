@@ -4,11 +4,11 @@
  */
 
 // Importar clases POO
-import { Perro } from './classes/Perro.js';
 import { PerroFactory } from './classes/PerroFactory.js';
+import { GatoFactory } from './classes/GatoFactory.js';
 
 // Importar servicios
-import { obtenerTodasLasRazas } from './services/api.js';
+import { obtenerTodasLasRazas, obtenerTodasLasRazasGato } from './services/api.js';
 import { Storage } from './utils/storage.js';
 
 // Importar componentes UI
@@ -21,9 +21,10 @@ import { AdoptionList } from './components/AdoptionList.js';
 // Estado Global de la Aplicacion
 // ============================================
 const AppState = {
-    perros: [],           // Todas las razas de perros (instancias de Perro)
-    perrosFiltrados: [],  // Perros despues de aplicar filtros
-    perroSeleccionado: null, // Perro seleccionado para adoptar
+    especieActiva: 'perro',
+    mascotas: [],           // Todas las razas cargadas segun especie
+    mascotasFiltradas: [],  // Mascotas despues de aplicar filtros
+    mascotaSeleccionada: null, // Mascota seleccionada para adoptar
     cargando: true,       // Estado de carga
     error: null           // Mensaje de error si hay
 };
@@ -38,7 +39,9 @@ const DOM = {
     errorText: document.getElementById('errorText'),
     noResults: document.getElementById('noResults'),
     resultadosCount: document.getElementById('resultadosCount'),
-    totalPerros: document.getElementById('totalPerros')
+    totalPerros: document.getElementById('totalPerros'),
+    tituloBusqueda: document.getElementById('tituloBusqueda'),
+    loadingText: document.getElementById('loadingText')
 };
 
 // ============================================
@@ -93,23 +96,31 @@ function ocultarSinResultados() {
  * Renderiza los perros en el grid
  * @param {Perro[]} perros - Array de perros a renderizar
  */
-function renderizarPerros(perros) {
-    if (!perros || perros.length === 0) {
+function renderizarMascotas(mascotas) {
+    if (!mascotas || mascotas.length === 0) {
         mostrarSinResultados();
         DOM.resultadosCount.textContent = DogCard.textoResultados(0);
         return;
     }
     
     ocultarSinResultados();
-    DOM.perrosGrid.innerHTML = DogCard.renderizarGrid(perros);
-    DOM.resultadosCount.textContent = DogCard.textoResultados(perros.length);
+    DOM.perrosGrid.innerHTML = DogCard.renderizarGrid(mascotas);
+    DOM.resultadosCount.textContent = DogCard.textoResultados(mascotas.length);
 }
 
 /**
  * Actualiza el badge con el total de razas
  */
 function actualizarTotalPerros() {
-    DOM.totalPerros.textContent = `${AppState.perros.length} razas`;
+    DOM.totalPerros.textContent = `${AppState.mascotas.length} razas`;
+    if (DOM.tituloBusqueda) {
+        DOM.tituloBusqueda.textContent = AppState.especieActiva === 'perro' ? 'Buscar Razas de Perros' : 'Buscar Razas de Gatos';
+    }
+    if (DOM.loadingText) {
+        DOM.loadingText.textContent = AppState.especieActiva === 'perro'
+            ? 'Cargando razas de perros...'
+            : 'Cargando razas de gatos...';
+    }
 }
 
 // ============================================
@@ -121,15 +132,16 @@ function actualizarTotalPerros() {
  */
 function aplicarFiltros() {
     const filtros = DogSelector.obtenerFiltros();
-    
-    // Usar el metodo filtrar de PerroFactory
-    AppState.perrosFiltrados = PerroFactory.filtrar(AppState.perros, filtros);
-    
-    // Ordenar por nombre
-    AppState.perrosFiltrados = PerroFactory.ordenar(AppState.perrosFiltrados, 'nombre', true);
-    
-    // Renderizar resultados
-    renderizarPerros(AppState.perrosFiltrados);
+
+    if (AppState.especieActiva === 'perro') {
+        AppState.mascotasFiltradas = PerroFactory.filtrar(AppState.mascotas, filtros);
+        AppState.mascotasFiltradas = PerroFactory.ordenar(AppState.mascotasFiltradas, 'nombre', true);
+    } else {
+        AppState.mascotasFiltradas = GatoFactory.filtrar(AppState.mascotas, filtros);
+        AppState.mascotasFiltradas = GatoFactory.ordenar(AppState.mascotasFiltradas, true);
+    }
+
+    renderizarMascotas(AppState.mascotasFiltradas);
 }
 
 // ============================================
@@ -140,13 +152,12 @@ function aplicarFiltros() {
  * Maneja el clic en el boton de adoptar
  * @param {number} perroId - ID del perro a adoptar
  */
-function manejarAdoptar(perroId) {
-    // Buscar el perro por ID
-    const perro = AppState.perros.find(p => p.id === parseInt(perroId));
-    
-    if (perro) {
-        AppState.perroSeleccionado = perro;
-        Modal.abrirModal(perro);
+function manejarAdoptar(mascotaId) {
+    const mascota = AppState.mascotas.find(item => String(item.id) === String(mascotaId));
+
+    if (mascota) {
+        AppState.mascotaSeleccionada = mascota;
+        Modal.abrirModal(mascota);
     }
 }
 
@@ -155,10 +166,9 @@ function manejarAdoptar(perroId) {
  * @param {Object} datos - Datos del formulario de adopcion
  */
 function confirmarAdopcion(datos) {
-    if (!AppState.perroSeleccionado) return;
+    if (!AppState.mascotaSeleccionada) return;
     
-    // Crear registro de adopcion usando el metodo de la clase Perro
-    const adopcion = AppState.perroSeleccionado.crearRegistroAdopcion(
+    const adopcion = AppState.mascotaSeleccionada.crearRegistroAdopcion(
         datos.nombreMascota,
         datos.nombreAdoptante
     );
@@ -175,11 +185,11 @@ function confirmarAdopcion(datos) {
         
         // Mostrar mensaje de exito (usando el toast de Bootstrap)
         mostrarNotificacion(
-            `¡Felicidades! Has adoptado a ${datos.nombreMascota} (${AppState.perroSeleccionado.nombre})`
+            `¡Felicidades! Has adoptado a ${datos.nombreMascota} (${AppState.mascotaSeleccionada.nombre})`
         );
         
         // Limpiar seleccion
-        AppState.perroSeleccionado = null;
+        AppState.mascotaSeleccionada = null;
     }
 }
 
@@ -255,8 +265,8 @@ function configurarEventosGrid() {
     DOM.perrosGrid.addEventListener('click', (e) => {
         const btnAdoptar = e.target.closest('[data-action="adoptar"]');
         if (btnAdoptar) {
-            const perroId = btnAdoptar.dataset.perroId;
-            manejarAdoptar(perroId);
+            const mascotaId = btnAdoptar.dataset.mascotaId;
+            manejarAdoptar(mascotaId);
         }
     });
 }
@@ -272,29 +282,34 @@ async function cargarDatos() {
     mostrarCargando();
     
     try {
-        console.log('[v0] Iniciando cargarDatos()');
-        // Obtener datos de la API
-        const datosAPI = await obtenerTodasLasRazas();
-        console.log('[v0] datosAPI recibido:', datosAPI);
-        
-        // Usar Factory para crear instancias de Perro
-        AppState.perros = PerroFactory.crearMultiples(datosAPI);
-        console.log('[v0] Perros creados:', AppState.perros.length);
-        AppState.perrosFiltrados = [...AppState.perros];
-        
-        // Ordenar alfabeticamente
-        AppState.perrosFiltrados = PerroFactory.ordenar(AppState.perrosFiltrados, 'nombre', true);
-        
-        // Inicializar selectores con los datos
-        DogSelector.inicializarSelectores(
-            AppState.perros,
-            PerroFactory.extraerGruposUnicos,
-            PerroFactory.extraerTemperamentosUnicos
-        );
+        if (AppState.especieActiva === 'perro') {
+            const datosAPI = await obtenerTodasLasRazas();
+            AppState.mascotas = PerroFactory.crearMultiples(datosAPI);
+            AppState.mascotasFiltradas = PerroFactory.ordenar([...AppState.mascotas], 'nombre', true);
+            DogSelector.inicializarSelectores(
+                AppState.mascotas,
+                PerroFactory.extraerGruposUnicos,
+                PerroFactory.extraerTemperamentosUnicos,
+                'perro'
+            );
+        } else {
+            const datosAPI = await obtenerTodasLasRazasGato();
+            AppState.mascotas = GatoFactory.crearMultiples(datosAPI);
+            AppState.mascotasFiltradas = GatoFactory.ordenar([...AppState.mascotas], true);
+            DogSelector.inicializarSelectores(
+                AppState.mascotas,
+                (gatos) => {
+                    const niveles = new Set(gatos.map(gato => String(gato.childFriendly || 0)).filter(item => item !== '0'));
+                    return Array.from(niveles).sort((a, b) => Number(a) - Number(b));
+                },
+                GatoFactory.extraerTemperamentosUnicos,
+                'gato'
+            );
+        }
         
         // Actualizar UI
         actualizarTotalPerros();
-        renderizarPerros(AppState.perrosFiltrados);
+        renderizarMascotas(AppState.mascotasFiltradas);
         
     } catch (error) {
         AppState.error = error.message;
@@ -313,14 +328,17 @@ async function init() {
     
     // Configurar event listeners
     configurarEventosGrid();
-    DogSelector.configurarEventListeners(aplicarFiltros);
+    DogSelector.configurarEventListeners(aplicarFiltros, async (especie) => {
+        AppState.especieActiva = especie;
+        await cargarDatos();
+    });
     Modal.configurarEventListeners(confirmarAdopcion);
     AdoptionList.configurarEventListeners(eliminarAdopcion, limpiarTodasAdopciones);
     
     // Cargar adopciones existentes de localStorage
     actualizarListaAdopciones();
     
-    // Cargar datos de la API
+    // Cargar datos de la API (por defecto perros)
     await cargarDatos();
 }
 

@@ -4,7 +4,8 @@
  */
 
 // Clave para almacenar adopciones en localStorage
-const STORAGE_KEY = 'perrosAdoptados';
+const STORAGE_KEY = 'mascotasAdoptadas';
+const LEGACY_STORAGE_KEY = 'perrosAdoptados';
 
 /**
  * Guarda una nueva adopcion en localStorage
@@ -35,7 +36,15 @@ export function guardarAdopcion(adopcion) {
 export function obtenerAdopciones() {
     try {
         const data = localStorage.getItem(STORAGE_KEY);
-        return data ? JSON.parse(data) : [];
+        if (data) return JSON.parse(data);
+
+        // Migracion automatica de clave legacy.
+        const legacyData = localStorage.getItem(LEGACY_STORAGE_KEY);
+        if (!legacyData) return [];
+        const parsed = JSON.parse(legacyData);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
+        localStorage.removeItem(LEGACY_STORAGE_KEY);
+        return parsed;
     } catch (error) {
         console.error('Error al obtener adopciones:', error);
         return [];
@@ -90,7 +99,7 @@ export function contarAdopciones() {
  */
 export function yaAdoptado(perroId) {
     const adoptados = obtenerAdopciones();
-    return adoptados.some(adopcion => adopcion.perroId === perroId);
+    return adoptados.some(adopcion => adopcion.mascotaId === perroId || adopcion.perroId === perroId);
 }
 
 /**

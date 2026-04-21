@@ -145,7 +145,7 @@ export class PerroFactory {
             }
 
             // Filtrar por grupo de raza
-            if (filtros.grupoRaza && !perro.perteneceAGrupo(filtros.grupoRaza)) {
+            if (filtros.principal && !perro.perteneceAGrupo(filtros.principal)) {
                 return false;
             }
 

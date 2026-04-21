@@ -1,13 +1,13 @@
 /**
- * Servicio API - Consumo de The Dog API
- * Maneja todas las peticiones asincronas a la API de perros
+ * Servicio API - Consumo de The Dog API y The Cat API
+ * Maneja todas las peticiones asincronas para perros y gatos.
  */
 
-// URL base de The Dog API
-const API_BASE_URL = 'https://api.thedogapi.com/v1';
+const DOG_API_BASE_URL = 'https://api.thedogapi.com/v1';
+const CAT_API_BASE_URL = 'https://api.thecatapi.com/v1';
 
-// API KEY de The Dog API
-const API_KEY = 'live_cODIvcHhjuEeZ0o017xMfQvS18Z27Xsv27aJLExSSy2Yb02gKHQ0C6BQixEHAddP';
+const DOG_API_KEY = 'live_cODIvcHhjuEeZ0o017xMfQvS18Z27Xsv27aJLExSSy2Yb02gKHQ0C6BQixEHAddP';
+const CAT_API_KEY = 'live_3ucjOSCaru399FsKg64IFpo7Dvm7Ovw5b2gGAxnDxDRXRsxWtPtIF3ZiYMEsrB1r';
 
 /**
  * Obtiene todas las razas de perros disponibles
@@ -16,26 +16,37 @@ const API_KEY = 'live_cODIvcHhjuEeZ0o017xMfQvS18Z27Xsv27aJLExSSy2Yb02gKHQ0C6BQix
  */
 export async function obtenerTodasLasRazas() {
     try {
-        console.log('[v0] Intentando obtener razas desde:', `${API_BASE_URL}/breeds`);
-        const response = await fetch(`${API_BASE_URL}/breeds`, {
+        const response = await fetch(`${DOG_API_BASE_URL}/breeds`, {
             headers: {
-                'x-api-key': API_KEY
+                'x-api-key': DOG_API_KEY
             }
         });
-        
-        console.log('[v0] Response status:', response.status);
-        console.log('[v0] Response ok:', response.ok);
         
         if (!response.ok) {
             throw new Error(`Error HTTP: ${response.status} - ${response.statusText}`);
         }
         
-        const data = await response.json();
-        console.log('[v0] Datos recibidos:', data.length, 'razas');
-        return data;
+        return await response.json();
     } catch (error) {
-        console.error('[v0] Error al obtener todas las razas:', error);
         throw new Error('No se pudieron cargar las razas de perros. Por favor, verifica tu conexion a internet y que tu API key sea correcta.');
+    }
+}
+
+export async function obtenerTodasLasRazasGato() {
+    try {
+        const response = await fetch(`${CAT_API_BASE_URL}/breeds`, {
+            headers: {
+                'x-api-key': CAT_API_KEY
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status} - ${response.statusText}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        throw new Error('No se pudieron cargar las razas de gatos. Verifica tu conexion a internet y la API key de gatos.');
     }
 }
 
@@ -51,9 +62,9 @@ export async function buscarPorNombre(nombre) {
             return [];
         }
         
-        const response = await fetch(`${API_BASE_URL}/breeds/search?q=${encodeURIComponent(nombre)}`, {
+        const response = await fetch(`${DOG_API_BASE_URL}/breeds/search?q=${encodeURIComponent(nombre)}`, {
             headers: {
-                'x-api-key': API_KEY
+                'x-api-key': DOG_API_KEY
             }
         });
         
@@ -64,7 +75,6 @@ export async function buscarPorNombre(nombre) {
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error('Error al buscar por nombre:', error);
         throw new Error('Error al buscar razas. Intenta de nuevo.');
     }
 }
@@ -77,9 +87,9 @@ export async function buscarPorNombre(nombre) {
  */
 export async function obtenerRazaPorId(id) {
     try {
-        const response = await fetch(`${API_BASE_URL}/breeds/${id}`, {
+        const response = await fetch(`${DOG_API_BASE_URL}/breeds/${id}`, {
             headers: {
-                'x-api-key': API_KEY
+                'x-api-key': DOG_API_KEY
             }
         });
         
@@ -93,7 +103,6 @@ export async function obtenerRazaPorId(id) {
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error(`Error al obtener raza con ID ${id}:`, error);
         throw error;
     }
 }
@@ -107,10 +116,10 @@ export async function obtenerRazaPorId(id) {
 export async function obtenerImagenesRaza(breedId, limite = 5) {
     try {
         const response = await fetch(
-            `${API_BASE_URL}/images/search?breed_ids=${breedId}&limit=${limite}`,
+            `${DOG_API_BASE_URL}/images/search?breed_ids=${breedId}&limit=${limite}`,
             {
                 headers: {
-                    'x-api-key': API_KEY
+                    'x-api-key': DOG_API_KEY
                 }
             }
         );
@@ -122,7 +131,6 @@ export async function obtenerImagenesRaza(breedId, limite = 5) {
         const data = await response.json();
         return data.map(img => img.url);
     } catch (error) {
-        console.error('Error al obtener imagenes:', error);
         return [];
     }
 }
@@ -139,9 +147,25 @@ export const DogAPI = {
     // Metodo de utilidad para verificar la conexion
     async verificarConexion() {
         try {
-            const response = await fetch(`${API_BASE_URL}/breeds?limit=1`, {
+            const response = await fetch(`${DOG_API_BASE_URL}/breeds?limit=1`, {
                 headers: {
-                    'x-api-key': API_KEY
+                    'x-api-key': DOG_API_KEY
+                }
+            });
+            return response.ok;
+        } catch {
+            return false;
+        }
+    }
+};
+
+export const CatAPI = {
+    obtenerTodasLasRazas: obtenerTodasLasRazasGato,
+    async verificarConexion() {
+        try {
+            const response = await fetch(`${CAT_API_BASE_URL}/breeds?limit=1`, {
+                headers: {
+                    'x-api-key': CAT_API_KEY
                 }
             });
             return response.ok;
