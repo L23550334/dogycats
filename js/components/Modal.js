@@ -5,6 +5,7 @@
 
 // Referencia al modal de Bootstrap
 let modalInstance = null;
+let ultimoElementoConFoco = null;
 
 /**
  * Inicializa el modal de Bootstrap
@@ -24,6 +25,8 @@ export function abrirModal(mascota) {
     if (!modalInstance) {
         inicializarModal();
     }
+
+    ultimoElementoConFoco = document.activeElement;
     
     // Actualizar contenido del modal
     const modalPerroImg = document.getElementById('modalPerroImg');
@@ -59,6 +62,14 @@ export function abrirModal(mascota) {
  * Cierra el modal
  */
 export function cerrarModal() {
+    const modalElement = document.getElementById('adoptionModal');
+    const activeElement = document.activeElement;
+
+    // Evita que el foco quede dentro de un modal que sera ocultado.
+    if (modalElement && activeElement && modalElement.contains(activeElement)) {
+        activeElement.blur();
+    }
+
     if (modalInstance) {
         modalInstance.hide();
     }
@@ -125,6 +136,7 @@ export function validarFormulario() {
 export function configurarEventListeners(onConfirmar) {
     const btnConfirmar = document.getElementById('btnConfirmarAdopcion');
     const form = document.getElementById('adoptionForm');
+    const modalElement = document.getElementById('adoptionModal');
     
     if (btnConfirmar) {
         btnConfirmar.addEventListener('click', () => {
@@ -163,6 +175,16 @@ export function configurarEventListeners(onConfirmar) {
     if (nombreAdoptante) {
         nombreAdoptante.addEventListener('input', () => {
             nombreAdoptante.classList.remove('is-invalid');
+        });
+    }
+
+    if (modalElement) {
+        modalElement.addEventListener('hidden.bs.modal', () => {
+            if (ultimoElementoConFoco && typeof ultimoElementoConFoco.focus === 'function') {
+                ultimoElementoConFoco.focus();
+            } else {
+                document.body.focus();
+            }
         });
     }
 }
