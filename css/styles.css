@@ -9,6 +9,7 @@
     --color-secondary: #e07a5f;
     --color-secondary-dark: #c4684f;
     --color-success: #81b29a;
+     --color-success1: red;
     --color-success-dark: #6a9680;
     --color-background: #f8f9fa;
     --color-surface: #ffffff;
@@ -37,7 +38,7 @@ body {
 
 /* Header */
 .header-main {
-    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    background: #237A4A;
     color: white;
     box-shadow: var(--shadow-md);
 }
@@ -169,6 +170,9 @@ body {
 /* Adoptions Panel */
 .card-header.bg-success {
     background: linear-gradient(135deg, var(--color-success) 0%, var(--color-success-dark) 100%) !important;
+}
+.card-header.bg-success1 {
+    background: linear-gradient(135deg, var(--color-success1) 0%, var(--color-success1) 100%) !important;
 }
 
 .adoption-item {
