@@ -4,101 +4,126 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adopta un Amigo Virtual - Perros y Gatos</title>
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Custom CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <!-- Header -->
-    <header class="header-main py-4">
+
+    <!-- ══════════════════════════════════════════
+         HEADER (top bar only — branding + badges)
+    ══════════════════════════════════════════ -->
+    <header class="header-main py-3">
         <div class="container">
             <div class="d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center gap-3">
-                    <i class="bi bi-heart-fill text-danger fs-2"></i>
+                    <span class="header-paw">🐾</span>
                     <div>
-                        <h1 class="mb-0 fw-bold">Adopta un Amigo Virtual</h1>
-                        <b><p class="mb-0 text-muted">Encuentra tu companero perfecto</p></b>
+                        <h1 class="mb-0 fw-bold"> Dale la oportunidad a un mascota que lo necesita.</h1>
+                        <p class="mb-0">El proceso es 100% gratuito, Completa todo el trámite desde tu celular o computadora.</p>
                     </div>
                 </div>
                 <div class="d-flex align-items-center gap-2">
-                    <span class="badge bg-primary" id="totalPerros" >0 razas</span>
-                    <span class="badge" id="totalAdopciones" style="background-color: #67a365;">0 adopciones</span>
+                    <span class="badge" id="totalPerros">0 razas</span>
+                    <span class="badge badge-adopciones" id="totalAdopciones">0 adopciones</span>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="container py-4">
-        <div class="row">
-            <!-- Left Column - Dogs Grid -->
-            <div class="col-lg-8">
-                <!-- Search and Filters Section -->
-                <section class="card mb-4 shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title mb-3" id="tituloBusqueda">
-                            <i class="bi bi-search me-2"></i>Buscar Razas de Perros
-                        </h5>
-                        <div class="row g-3">
-                            <div class="col-md-3">
-                                <label for="speciesSelect" class="form-label">Especie</label>
-                                <select class="form-select" id="speciesSelect">
-                                    <option value="perro" selected>Perro</option>
-                                    <option value="gato">Gato</option>
+    <!-- ══════════════════════════════════════════
+         HERO SEARCH BANNER
+    ══════════════════════════════════════════ -->
+    <section class="hero-search-banner">
+        <div class="container">
+            <div class="hero-card">
+                <!-- Left: headline + mascot image -->
+                <div class="hero-left">
+                    <div class="hero-text">
+                        <h2 class="hero-headline">
+                            Encuentra al<br>
+                            <span class="hero-highlight">nuevo integrante</span><br>
+                            de tu familia
+                        </h2>
+                    </div>
+                    <img
+                        src="https://www.apasdem.org.mx/wp-content/uploads/2018/01/adoptame-perro-690x429.jpg"
+                        alt="Perro con letrero ¿me adoptas?"
+                        class="hero-pet-img"
+                    >
+                </div>
+
+                <!-- Right: filters -->
+                <div class="hero-right">
+                    <p class="hero-sub">Quiero adoptar un…</p>
+                    <div class="hero-filters">
+                        <div class="hero-filter-row">
+                            <div class="hero-filter-item">
+                                <label for="speciesSelect" class="hf-label">Especie</label>
+                                <select class="hf-select" id="speciesSelect">
+                                    <option value="perro">🐶 Perro</option>
+                                    <option value="gato">🐱 Gato</option>
                                 </select>
                             </div>
-                            <!-- Search by Name -->
-                            <div class="col-md-3">
-                                <label for="searchNombre" class="form-label">Nombre</label>
-                                <input type="text" class="form-control" id="searchNombre" placeholder="Buscar por nombre...">
-                            </div>
-                            <div class="col-md-3" id="principalFilterWrap">
-                                <label for="filterPrincipal" class="form-label" id="filterPrincipalLabel">Grupo de Raza</label>
-                                <select class="form-select" id="filterPrincipal">
+                            <div class="hero-filter-item" id="principalFilterWrap">
+                                <label for="filterPrincipal" class="hf-label" id="filterPrincipalLabel">Grupo de Raza</label>
+                                <select class="hf-select" id="filterPrincipal">
                                     <option value="">Todos los grupos</option>
                                 </select>
                             </div>
-                            <div class="col-md-3">
-                                <label for="filterTemperamento" class="form-label">Temperamento</label>
-                                <select class="form-select" id="filterTemperamento">
+                            <div class="hero-filter-item">
+                                <label for="filterTemperamento" class="hf-label">Temperamento</label>
+                                <select class="hf-select" id="filterTemperamento">
                                     <option value="">Todos los temperamentos</option>
                                 </select>
                             </div>
-                            <div class="col-md-3 d-none" id="childFriendlyWrap">
-                                <label for="filterChildFriendly" class="form-label">Child Friendly (min)</label>
-                                <select class="form-select" id="filterChildFriendly">
+                        </div>
+                        <div class="hero-filter-row">
+                            <div class="hero-filter-item hero-filter-grow">
+                                <label for="searchNombre" class="hf-label">Nombre</label>
+                                <input type="text" class="hf-input" id="searchNombre" placeholder="Buscar por nombre...">
+                            </div>
+                            <div class="hero-filter-item d-none" id="childFriendlyWrap">
+                                <label for="filterChildFriendly" class="hf-label">Child Friendly</label>
+                                <select class="hf-select" id="filterChildFriendly">
                                     <option value="">Cualquier nivel</option>
                                 </select>
                             </div>
-                        </div>
-                        <div class="mt-3 d-flex gap-2">
-                            <button class="btn btn-outline-secondary" id="btnLimpiarFiltros">
-                                <i class="bi bi-x-circle me-1"></i>Limpiar Filtros
+                            <button class="hf-btn-clear" id="btnLimpiarFiltros">
+                                <i class="bi bi-x-circle me-1"></i> Limpiar filtros
                             </button>
-                            <span class="text-muted align-self-center ms-auto" id="resultadosCount">
-                                Mostrando 0 resultados
-                            </span>
                         </div>
                     </div>
-                </section>
+                    <p class="hero-count" id="resultadosCount">Mostrando 0 resultados</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-                <!-- Dogs Grid -->
-                <section id="perrosGrid" class="row g-4">
-                    <!-- Dog cards will be inserted here dynamically -->
-                </section>
+    <!-- ══════════════════════════════════════════
+         MAIN CONTENT
+    ══════════════════════════════════════════ -->
+    <main class="container py-4">
+        <div class="row">
 
-                <!-- Loading Spinner -->
-                <div id="loadingSpinner" class="text-center py-5">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Cargando...</span>
-                    </div>
-                    <p class="mt-2 text-muted" id="loadingText">Cargando razas de perros...</p>
+            <!-- Left: Dogs Grid -->
+            <div class="col-lg-8">
+                <div class="section-label mb-3">
+                    <span id="tituloBusqueda">Razas disponibles</span>
                 </div>
 
-                <!-- Error Message -->
+                <section id="perrosGrid" class="row g-4"></section>
+
+                <!-- Loading -->
+                <div id="loadingSpinner" class="text-center py-5">
+                    <div class="spinner-border" role="status" style="color:var(--moss)">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                    <p class="mt-2 text-muted" id="loadingText">Cargando razas…</p>
+                </div>
+
+                <!-- Error -->
                 <div id="errorMessage" class="alert alert-danger d-none" role="alert">
                     <i class="bi bi-exclamation-triangle me-2"></i>
                     <span id="errorText">Error al cargar los datos</span>
@@ -109,23 +134,33 @@
                     <i class="bi bi-emoji-frown fs-1 text-muted"></i>
                     <p class="mt-2 text-muted">No se encontraron razas con esos criterios</p>
                 </div>
+
+                <!-- Pagination -->
+                <div id="paginationWrap" class="pagination-wrap mt-4 d-none">
+                    <button class="pg-btn" id="btnPrevPage" disabled>
+                        <i class="bi bi-chevron-left"></i>
+                    </button>
+                    <div class="pg-pages" id="pgPages"></div>
+                    <button class="pg-btn" id="btnNextPage">
+                        <i class="bi bi-chevron-right"></i>
+                    </button>
+                    <span class="pg-info" id="pgInfo"></span>
+                </div>
             </div>
 
-            <!-- Right Column - Adoptions List -->
+            <!-- Right: Adoptions Panel -->
             <div class="col-lg-4">
-                <section class="card shadow-sm sticky-top" style="top: 20px;">
+                <section class="card shadow-sm sticky-top adoptions-panel" style="top: 20px;">
                     <div class="card-header bg-success text-white">
                         <h5 class="mb-0">
                             <i class="bi bi-house-heart me-2"></i>Mis Adopciones
                         </h5>
                     </div>
                     <div class="card-body" id="adopcionesContainer">
-                        <div id="listaAdopciones">
-                            <!-- Adoptions will be inserted here -->
-                        </div>
+                        <div id="listaAdopciones"></div>
                         <div id="noAdopciones" class="text-center text-muted py-4">
                             <i class="bi bi-inbox fs-1"></i>
-                            <p class="mt-2">Aun no has adoptado ninguna mascota</p>
+                            <p class="mt-2">Aún no has adoptado ninguna mascota</p>
                             <small>Haz clic en "Adoptar" en cualquier tarjeta</small>
                         </div>
                     </div>
@@ -137,41 +172,168 @@
                 </section>
             </div>
         </div>
+
+        <!-- ══════════════════════════════════════
+             TIPS SECTION  (below the grid)
+        ══════════════════════════════════════ -->
+        <section class="tips-section mt-5 mb-4">
+            <div class="tips-header mb-4">
+                <span class="tips-eyebrow">Guía de cuidados</span>
+                <h2 class="tips-title">Lo que necesita tu nueva mascota</h2>
+                <p class="tips-sub">Prepárate antes de que llegue a casa</p>
+            </div>
+
+            <div class="row g-4">
+
+                <!-- Tip 1 -->
+                <div class="col-md-6 col-xl-3">
+                    <div class="tip-card">
+                        <div class="tip-number">1</div>
+                        <div class="tip-icon-wrap">
+                            <i class="bi bi-tag-fill"></i>
+                        </div>
+                        <h4 class="tip-name">Identificación y Collar</h4>
+                        <p class="tip-desc">
+                            La placa debe llevar su nombre y tus datos de contacto. Tu mascota debería usarla siempre, incluso dentro de casa.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Tip 2 -->
+                <div class="col-md-6 col-xl-3">
+                    <div class="tip-card">
+                        <div class="tip-number">2</div>
+                        <div class="tip-icon-wrap">
+                            <i class="bi bi-link-45deg"></i>
+                        </div>
+                        <h4 class="tip-name">Correa</h4>
+                        <p class="tip-desc">
+                            Sal siempre con correa en la calle. Evita jalarla con fuerza — un arnés puede ser más seguro para razas que tiran.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Tip 3 -->
+                <div class="col-md-6 col-xl-3">
+                    <div class="tip-card">
+                        <div class="tip-number">3</div>
+                        <div class="tip-icon-wrap">
+                            <i class="bi bi-life-preserver"></i>
+                        </div>
+                        <h4 class="tip-name">Arnés</h4>
+                        <p class="tip-desc">
+                            El arnés distribuye la presión en el pecho en lugar del cuello. Ideal para cachorros, razas pequeñas o perros que jalan mucho.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Tip 4 -->
+                <div class="col-md-6 col-xl-3">
+                    <div class="tip-card">
+                        <div class="tip-number">4</div>
+                        <div class="tip-icon-wrap">
+                            <i class="bi bi-egg-fried"></i>
+                        </div>
+                        <h4 class="tip-name">Alimentación</h4>
+                        <p class="tip-desc">
+                            Elige alimento de calidad adecuado para su edad y tamaño. Establece horarios fijos — 2 a 3 comidas al día es lo ideal.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Tip 5 -->
+                <div class="col-md-6 col-xl-3">
+                    <div class="tip-card">
+                        <div class="tip-number">5</div>
+                        <div class="tip-icon-wrap">
+                            <i class="bi bi-droplet-fill"></i>
+                        </div>
+                        <h4 class="tip-name">Agua fresca</h4>
+                        <p class="tip-desc">
+                            Mantén siempre un tazón limpio con agua disponible. Cambia el agua al menos una vez al día.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Tip 6 -->
+                <div class="col-md-6 col-xl-3">
+                    <div class="tip-card">
+                        <div class="tip-number">6</div>
+                        <div class="tip-icon-wrap">
+                            <i class="bi bi-hospital"></i>
+                        </div>
+                        <h4 class="tip-name">Veterinario</h4>
+                        <p class="tip-desc">
+                            Lleva a tu mascota a una revisión dentro de la primera semana. Asegúrate de que tenga su plan de vacunación al día.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Tip 7 -->
+                <div class="col-md-6 col-xl-3">
+                    <div class="tip-card">
+                        <div class="tip-number">7</div>
+                        <div class="tip-icon-wrap">
+                            <i class="bi bi-sun-fill"></i>
+                        </div>
+                        <h4 class="tip-name">Ejercicio diario</h4>
+                        <p class="tip-desc">
+                            Los perros necesitan al menos 30 min de ejercicio al día. Los gatos se benefician de juego activo para estimulación mental.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Tip 8 -->
+                <div class="col-md-6 col-xl-3">
+                    <div class="tip-card">
+                        <div class="tip-number">8</div>
+                        <div class="tip-icon-wrap">
+                            <i class="bi bi-house-heart-fill"></i>
+                        </div>
+                        <h4 class="tip-name">Espacio seguro</h4>
+                        <p class="tip-desc">
+                            Crea un rincón cómodo y tranquilo para que duerma. Sentirse seguro en casa acorta el tiempo de adaptación.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
     </main>
 
-    <!-- Adoption Modal -->
+    <!-- ══════════════════════════════════════════
+         ADOPTION MODAL
+    ══════════════════════════════════════════ -->
     <div class="modal fade" id="adoptionModal" tabindex="-1" aria-labelledby="adoptionModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title" id="adoptionModalLabel">
-                        <i class="bi bi-heart-fill me-2"></i>Confirmar Adopcion
+                        <i class="bi bi-heart-fill me-2"></i>Confirmar Adopción
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
-                    <!-- Dog Info Preview -->
                     <div class="text-center mb-4">
-                        <img id="modalPerroImg" src="" alt="Mascota" class="rounded-circle shadow" style="width: 120px; height: 120px; object-fit: cover;">
+                        <img id="modalPerroImg" src="" alt="Mascota" class="rounded-circle shadow" style="width:120px;height:120px;object-fit:cover;">
                         <h4 class="mt-3 mb-1" id="modalPerroNombre">Nombre de la Raza</h4>
                         <p class="text-muted" id="modalPerroGrupo">Grupo de Raza</p>
                     </div>
-                    
-                    <!-- Adoption Form -->
                     <form id="adoptionForm">
                         <input type="hidden" id="perroIdAdoptar">
                         <div class="mb-3">
                             <label for="nombreMascota" class="form-label">
                                 <i class="bi bi-tag me-1"></i>Nombre para tu mascota *
                             </label>
-                            <input type="text" class="form-control" id="nombreMascota" placeholder="Ej: Max, Luna, Rocky..." required>
+                            <input type="text" class="form-control" id="nombreMascota" placeholder="Ej: Max, Luna, Rocky…" required>
                             <div class="form-text">Elige un nombre especial para tu nuevo amigo</div>
                         </div>
                         <div class="mb-3">
                             <label for="nombreAdoptante" class="form-label">
                                 <i class="bi bi-person me-1"></i>Tu nombre *
                             </label>
-                            <input type="text" class="form-control" id="nombreAdoptante" placeholder="Ej: Juan Garcia" required>
+                            <input type="text" class="form-control" id="nombreAdoptante" placeholder="Ej: Juan García" required>
                         </div>
                     </form>
                 </div>
@@ -180,7 +342,7 @@
                         <i class="bi bi-x me-1"></i>Cancelar
                     </button>
                     <button type="button" class="btn btn-success" id="btnConfirmarAdopcion">
-                        <i class="bi bi-check-heart me-1"></i>Confirmar Adopcion
+                        <i class="bi bi-check-heart me-1"></i>Confirmar Adopción
                     </button>
                 </div>
             </div>
@@ -188,21 +350,96 @@
     </div>
 
     <!-- Footer -->
-    <footer class="footer-main py-4 mt-5">
+    <footer class="footer-main py-4 mt-2">
         <div class="container text-center">
             <p class="mb-1">
-                <i class="bi bi-heart-fill text-danger"></i>
-                Adopta un Amigo Virtual - Practica de Desarrollo Web
+                🐾 Adopta un Amigo Virtual — Práctica de Desarrollo Web
             </p>
-            <small class="text-muted">
-                Datos proporcionados por <a href="https://thedogapi.com" target="_blank" rel="noopener">The Dog API</a> y <a href="https://thecatapi.com" target="_blank" rel="noopener">The Cat API</a>
+            <small>
+                Datos: <a href="https://thedogapi.com" target="_blank" rel="noopener">The Dog API</a> &amp;
+                <a href="https://thecatapi.com" target="_blank" rel="noopener">The Cat API</a>
             </small>
         </div>
     </footer>
 
-    <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- App Scripts (ES6 Modules) -->
+    <!-- Pagination helper (exposes window.Pagination for app.js) -->
+    <script>
+    /**
+     * Pagination helper
+     * Usage from app.js:
+     *   window.Pagination.init({ total, perPage, currentPage, onPageChange })
+     *   window.Pagination.update(currentPage, total)
+     */
+    window.Pagination = (() => {
+        const CARDS_PER_PAGE = 12;
+        let _state = { total: 0, perPage: CARDS_PER_PAGE, current: 1, onChange: null };
+
+        function buildPages() {
+            const totalPages = Math.ceil(_state.total / _state.perPage);
+            const wrap = document.getElementById('paginationWrap');
+            const pgPages = document.getElementById('pgPages');
+            const pgInfo  = document.getElementById('pgInfo');
+            const btnPrev = document.getElementById('btnPrevPage');
+            const btnNext = document.getElementById('btnNextPage');
+
+            if (!wrap) return;
+            wrap.classList.toggle('d-none', totalPages <= 1);
+            if (totalPages <= 1) return;
+
+            btnPrev.disabled = _state.current === 1;
+            btnNext.disabled = _state.current === totalPages;
+            pgInfo.textContent = `Pág. ${_state.current} / ${totalPages}`;
+
+            pgPages.innerHTML = '';
+            const range = getRange(_state.current, totalPages);
+            range.forEach(item => {
+                if (item === '…') {
+                    const d = document.createElement('span');
+                    d.className = 'pg-dots'; d.textContent = '…';
+                    pgPages.appendChild(d);
+                } else {
+                    const b = document.createElement('button');
+                    b.className = 'pg-page-btn' + (item === _state.current ? ' active' : '');
+                    b.textContent = item;
+                    b.addEventListener('click', () => goTo(item));
+                    pgPages.appendChild(b);
+                }
+            });
+        }
+
+        function getRange(cur, total) {
+            if (total <= 7) return Array.from({length: total}, (_, i) => i + 1);
+            if (cur <= 4) return [1,2,3,4,5,'…',total];
+            if (cur >= total - 3) return [1,'…',total-4,total-3,total-2,total-1,total];
+            return [1,'…',cur-1,cur,cur+1,'…',total];
+        }
+
+        function goTo(page) {
+            _state.current = page;
+            buildPages();
+            if (_state.onChange) _state.onChange(page);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function init({ total, perPage = CARDS_PER_PAGE, currentPage = 1, onPageChange }) {
+            _state = { total, perPage, current: currentPage, onChange: onPageChange };
+            const btnPrev = document.getElementById('btnPrevPage');
+            const btnNext = document.getElementById('btnNextPage');
+            if (btnPrev) btnPrev.onclick = () => goTo(_state.current - 1);
+            if (btnNext) btnNext.onclick = () => goTo(_state.current + 1);
+            buildPages();
+        }
+
+        function update(currentPage, total) {
+            _state.current = currentPage;
+            if (total !== undefined) _state.total = total;
+            buildPages();
+        }
+
+        return { init, update, CARDS_PER_PAGE };
+    })();
+    </script>
     <script type="module" src="js/app.js"></script>
 </body>
 </html>
